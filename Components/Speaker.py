@@ -115,8 +115,8 @@ def detect_faces_and_speakers(input_video_path, output_video_path):
         out.write(frame)
         # cv2.imshow('Frame', frame) # Removed GUI display
 
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
+        # if cv2.waitKey(1) & 0xFF == ord('q'):
+        #     break
 
     cap.release()
     out.release()
