@@ -1,13 +1,14 @@
-import openai
-from dotenv import load_dotenv
 import os
 import json
+from dotenv import load_dotenv
+from openai import OpenAI
 
 load_dotenv()
 
-openai.api_key = os.getenv("OPENAI_API")
+# Initialize OpenAI client
+client = OpenAI(api_key=os.getenv("OPENAI_API"))
 
-if not openai.api_key:
+if not client.api_key:
     raise ValueError("API key not found. Make sure it is defined in the .env file.")
 
 
@@ -56,8 +57,7 @@ Any Example
 def GetHighlight(Transcription):
     print("Getting Highlight from Transcription ")
     try:
-
-        response = openai.ChatCompletion.create(
+        response = client.chat.completions.create(
             model="gpt-4o-2024-05-13",
             temperature=0.7,
             messages=[
