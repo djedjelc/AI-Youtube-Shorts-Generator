@@ -60,6 +60,9 @@ def detect_faces_and_speakers(input_video_path, output_video_path):
             break
 
         h, w = frame.shape[:2]
+        # Default bounding box (whole frame) to avoid undefined variables
+        x, y, x1, y1 = 0, 0, w, h
+
         blob = cv2.dnn.blobFromImage(cv2.resize(frame, (300, 300)), 1.0, (300, 300), (104.0, 177.0, 123.0))
         net.setInput(blob)
         detections = net.forward()
@@ -110,14 +113,14 @@ def detect_faces_and_speakers(input_video_path, output_video_path):
         Frames.append([x, y, x1, y1])
 
         out.write(frame)
-        cv2.imshow('Frame', frame)
+        # cv2.imshow('Frame', frame) # Removed GUI display
 
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
 
     cap.release()
     out.release()
-    cv2.destroyAllWindows()
+    # cv2.destroyAllWindows() # Removed GUI display
     os.remove(temp_audio_path)
 
 
