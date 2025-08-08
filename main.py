@@ -1,3 +1,5 @@
+import os
+
 from Components.YoutubeDownloader import download_youtube_video
 from Components.Edit import extractAudio, crop_video
 from Components.Transcription import transcribeAudio
@@ -16,21 +18,22 @@ if Vid:
         transcriptions = transcribeAudio(Audio)
         if len(transcriptions) > 0:
             TransText = ""
-
             for text, start, end in transcriptions:
-                TransText += (f"{start} - {end}: {text}")
+                TransText += (f"{start} - {end}: {text}\n")
 
-            start , stop = GetHighlight(TransText)
-            if start != 0 and stop != 0:
-                print(f"Start: {start} , End: {stop}")
+            segments = GetHighlight(TransText)  # list of (start, end)
+            if len(segments) > 0:
+                print(f"Segments trouvés : {segments}")
+                for idx, (start, stop) in enumerate(segments, start=1):
+                    print(f"Processing segment {idx}: {start}-{stop}s")
+                    base = f"{idx}"
+                    out_raw = f"Out_{base}.mp4"
+                    out_crop = f"croped_{base}.mp4"
+                    final_file = f"Final_{base}.mp4"
 
-                Output = "Out.mp4"
-
-                crop_video(Vid, Output, start, stop)
-                croped = "croped.mp4"
-
-                crop_to_vertical("Out.mp4", croped)
-                combine_videos("Out.mp4", croped, "Final.mp4")
+                    crop_video(Vid, out_raw, start, stop)
+                    crop_to_vertical(out_raw, out_crop)
+                    combine_videos(out_raw, out_crop, final_file)
             else:
                 print("Error in getting highlight")
         else:
